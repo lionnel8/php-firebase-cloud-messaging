@@ -1,4 +1,5 @@
 <?php
+
 namespace sngrl\PhpFirebaseCloudMessaging;
 
 /**
@@ -8,6 +9,7 @@ class Notification extends Message
 {
     private $title;
     private $body;
+    private $androidChannelId;
     private $badge;
     private $icon;
     private $color;
@@ -37,9 +39,23 @@ class Notification extends Message
     }
 
     /**
+     * android only since version O.
+     *
+     * @param mixed $androidChannelId
+     *
+     * @return Notification
+     */
+    public function setAndroidChannelId($androidChannelId)
+    {
+        $this->androidChannelId = $androidChannelId;
+        return $this;
+    }
+
+    /**
      * iOS only, will add smal red bubbles indicating the number of notifications to your apps icon
      *
      * @param integer $badge
+     *
      * @return $this
      */
     public function setBadge($badge)
@@ -52,6 +68,7 @@ class Notification extends Message
      * android only, set the name of your drawable resource as string
      *
      * @param string $icon
+     *
      * @return $this
      */
     public function setIcon($icon)
@@ -59,11 +76,12 @@ class Notification extends Message
         $this->icon = $icon;
         return $this;
     }
-    
+
     /**
      * android only, set the color background resource as string
      *
      * @param string $color
+     *
      * @return $this
      */
     public function setColor($color)
@@ -92,7 +110,7 @@ class Notification extends Message
 
     public function hasNotificationData()
     {
-        return $this->title || $this->body || $this->badge || $this->icon || $this->clickAction || $this->sound || $this->tag;
+        return $this->title || $this->body || $this->androidChannelId || $this->badge || $this->icon || $this->clickAction || $this->sound || $this->tag;
     }
 
     public function jsonSerialize()
@@ -103,6 +121,9 @@ class Notification extends Message
         }
         if ($this->body) {
             $jsonData['body'] = $this->body;
+        }
+        if ($this->androidChannelId) {
+            $jsonData['android_channel_id'] = $this->androidChannelId;
         }
         if ($this->badge) {
             $jsonData['badge'] = $this->badge;
@@ -124,4 +145,5 @@ class Notification extends Message
         }
         return $jsonData;
     }
+
 }
